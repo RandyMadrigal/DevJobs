@@ -1,0 +1,26 @@
+{
+  "name": "devjobs",
+  "version": "1.0.0",
+  "description": "Proyecto Final TDS",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RandyMadrigal/DevJobs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RandyMadrigal/DevJobs/issues"
+  },
+  "homepage": "https://github.com/RandyMadrigal/DevJobs#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.1"
+  }
+}
