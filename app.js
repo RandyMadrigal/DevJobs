@@ -8,8 +8,8 @@ const sequelize = require("./util/database/database");
 
 //routes
 
-//db connection middleware
-const sequelizeConnection = require("./middleware/connection");
+const sequelizeConnection = require("./middleware/connection"); //db connection middleware
+const CreateUserType = require("./middleware/CreateTypeUser");
 
 const app = express();
 
@@ -23,11 +23,16 @@ app.use((req, res, next) => {
   next();
 });
 
-//Relations in the DB
 app.use(sequelizeConnection.getDbConnection);
 
 sequelize
   .sync()
+  .then(() => {
+    CreateUserType.typeUser();
+  })
+  .catch((err) => {
+    console.log(err);
+  })
   .then((result) => {
     app.listen(PORT, () => {
       console.log("running in port: " + PORT + " xd");
