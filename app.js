@@ -20,6 +20,7 @@ const reactionsTypesModel = require("./model/reactionsTypes");
 //routes
 const userRouter = require("./routes/users");
 
+//Middleware
 const CreateUserType = require("./middleware/CreateTypeUser");
 
 const app = express();

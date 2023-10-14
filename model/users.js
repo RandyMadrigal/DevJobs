@@ -52,10 +52,6 @@ const Users = sequelize.define(
       allowNull: false,
     },
 
-    ConfirmPassword: {
-      type: Sequelize.STRING(520),
-      allowNull: false,
-    },
     isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
