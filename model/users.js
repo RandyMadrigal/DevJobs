@@ -22,7 +22,7 @@ const Users = sequelize.define(
       allowNull: false,
     },
 
-    userLastName: {
+    UserLastName: {
       type: Sequelize.STRING(120),
       allowNull: false,
     },
@@ -52,9 +52,13 @@ const Users = sequelize.define(
       allowNull: false,
     },
 
-    confirmPassword: {
+    ConfirmPassword: {
       type: Sequelize.STRING(520),
       allowNull: false,
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
 
