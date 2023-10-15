@@ -1,5 +1,5 @@
 const express = require("express");
-const { body } = require("express-validator");
+const { body, check } = require("express-validator");
 
 const router = express.Router();
 
@@ -26,7 +26,9 @@ router.post(
     body("UserPassword").trim().notEmpty().isLength({ min: 5, max: 120 }),
     body("ConfirmPassword").trim().notEmpty().isLength({ min: 5, max: 120 }),
   ],
-  userController.createUser
+  userController.createUser,
+
+  router.put("/activeUser/:Id", userController.activeUser)
 );
 
 exports.router = router;
