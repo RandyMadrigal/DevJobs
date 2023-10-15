@@ -11,18 +11,24 @@ exports.createUser = async (req, res, next) => {
     });
   }
 
+  if (!req.file) {
+    //verificar si se envia un archivo en el req
+    return res.status(400).json({ message: "Bad request - no image" });
+  }
+
   const {
     UserName,
     UserNickName,
     UserLastName,
     UserAddress,
-    UserImg,
     UserEmail,
     UserPhone,
     UserPassword,
     ConfirmPassword,
     userTypeId,
   } = req.body;
+
+  const UserImg = req.file.path.replace("\\", "/");
 
   //validacion de correo en uso
   try {
@@ -62,7 +68,7 @@ exports.createUser = async (req, res, next) => {
       UserLastName: UserLastName,
       UserAddress: UserAddress,
       UserImg: UserImg,
-      UserEmail: UserImg,
+      UserEmail: UserEmail,
       UserPhone: UserPhone,
       UserPassword: hashUserPassword,
       userTypeId: userTypeId,

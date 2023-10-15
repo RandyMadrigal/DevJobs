@@ -25,7 +25,6 @@ router.post(
       .isLength({ min: 10, max: 15 }),
     body("UserPassword").trim().notEmpty().isLength({ min: 5, max: 120 }),
     body("ConfirmPassword").trim().notEmpty().isLength({ min: 5, max: 120 }),
-    body("UserImg").trim().notEmpty(),
   ],
   userController.createUser
 );
