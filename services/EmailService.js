@@ -1,8 +1,8 @@
-require("dotenv").config();
-const { config } = require("dotenv");
-const nodemailer = require("nodemailer");
+import { config } from "dotenv";
+import nodemailer from "nodemailer";
 
-const sendEmail = async (to, from, UserNickName, Id) => {
+
+export const sendEmail = async (to, from, UserNickName, Id) => {
   try {
     //Create transporter
     const transporter = nodemailer.createTransport({
@@ -35,5 +35,3 @@ const sendEmail = async (to, from, UserNickName, Id) => {
     throw new Error("Error al enviar el correo");
   }
 };
-
-module.exports = sendEmail;

@@ -1,8 +1,7 @@
-const { Sequelize, DataTypes } = require("sequelize");
+import { Sequelize, DataTypes } from "sequelize";
+import { sequelize } from "../util/database/database.js";
 
-const sequelize = require("../util/database/database");
-
-const comments = sequelize.define(
+export const comments = sequelize.define(
   "comments",
   {
     Id: {
@@ -24,5 +23,3 @@ const comments = sequelize.define(
     updatedAt: false, // don't add updateAt attribute
   }
 );
-
-module.exports = comments;

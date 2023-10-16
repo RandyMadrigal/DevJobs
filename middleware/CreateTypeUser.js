@@ -1,12 +1,12 @@
-const UserTypeModel = require("../model/userType");
-const config = require("../util/config");
+import {userType as userTypeModel} from "../model/userType.js";
+import { USERTYPES } from "../util/config.js";
 
-exports.typeUser = async () => {
+export const typeUser = async () => {
   try {
-    const userTypes = await UserTypeModel.findAll();
+    const userTypes = await userTypeModel.findAll();
 
     if (userTypes.length === 0) {
-      const createdUsers = await UserTypeModel.bulkCreate(config.USERTYPES);
+      const createdUsers = await userTypeModel.bulkCreate(USERTYPES);
       console.log(`Successfully inserted ${createdUsers.length} users types`);
     }
   } catch (err) {

@@ -1,12 +1,10 @@
-const Sequelize = require("sequelize");
-const path = require("path"); //para poder accesar a la ruta donde sqlite guarda los archicos (se debe crear una carpeta y un archivo)
+import { Sequelize } from "sequelize";
+import path from "path";
 
-//MySql
-const sequelize = new Sequelize("devjobs", "root", "123456", {
+// TODO: crear un archivo .env y agregar las variables de entorno
+export const sequelize = new Sequelize("devjobs", "root", "admin", {
   host: "localhost",
   dialect: "mysql",
   port: 3306,
   logging: false,
 });
-
-module.exports = sequelize;

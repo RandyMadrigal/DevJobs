@@ -1,8 +1,7 @@
-const Sequelize = require("sequelize");
+import { Sequelize, DataTypes } from "sequelize";
+import { sequelize } from "../util/database/database.js";
 
-const sequelize = require("../util/database/database");
-
-const publicationsOptions = sequelize.define(
+export const publicationsOptions = sequelize.define(
   "publicationsOptions",
   {
     Id: {
@@ -24,5 +23,3 @@ const publicationsOptions = sequelize.define(
     updatedAt: false, // don't add updateAt attribute
   }
 );
-
-module.exports = publicationsOptions;
