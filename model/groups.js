@@ -1,8 +1,7 @@
-const { Sequelize, DataTypes } = require("sequelize");
+import { Sequelize, DataTypes } from "sequelize";
+import { sequelize } from "../util/database/database.js";
 
-const sequelize = require("../util/database/database");
-
-const groups = sequelize.define(
+export const groups = sequelize.define(
   "groups",
   {
     Id: {
@@ -34,5 +33,3 @@ const groups = sequelize.define(
     updatedAt: false, // don't add updateAt attribute
   }
 );
-
-module.exports = groups;

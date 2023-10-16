@@ -1,30 +1,25 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+import express from "express";
+import bodyParser from "body-parser";
+import path from "path";
+import { sequelize } from "./util/database/database.js";
+import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
+import { Users as usersModel } from "./model/users.js";
+import { userType as userTypeModel } from "./model/userType.js";
+import { publications as publicationsModel } from "./model/publications.js";
+import { skills as skillsModel } from "./model/skills.js";
+import { proyects as proyectsModel } from "./model/proyects.js";
+import { groups as groupsModel } from "./model/groups.js";
+import { comments as commentsModel } from "./model/comments.js";
+import { publicationsOptions as publicationsOptionsModel } from "./model/publicationsOptions.js";
+import { reactionsTypes as reactionsTypesModel } from "./model/reactionsTypes.js";
+import userRouter from "./routes/users.js";
+import { typeUser as CreateUserType } from "./middleware/CreateTypeUser.js";
+import { body } from "express-validator";
 
-const express = require("express");
-const bodyParser = require("body-parser");
+dotenv.config();
 const PORT = process.env.PORT || "8080";
-const path = require("path");
-const sequelize = require("./util/database/database");
-const multer = require("multer");
-const { v4: uuidv4 } = require("uuid"); //add uuid to a upload file
-
-//Database models
-const usersModel = require("./model/users");
-const userTypeModel = require("./model/userType");
-const publicationsModel = require("./model/publications");
-const skillsModel = require("./model/skills");
-const proyectsModel = require("./model/proyects");
-const groupsModel = require("./model/groups");
-const commentsModel = require("./model/comments");
-const publicationsOptionsModel = require("./model/publicationsOptions");
-const reactionsTypesModel = require("./model/reactionsTypes");
-
-//routes
-const userRouter = require("./routes/users");
-
-//Middleware
-const CreateUserType = require("./middleware/CreateTypeUser");
-
 const app = express();
 
 const storage = multer.diskStorage({
@@ -48,10 +43,9 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-app.use(bodyParser.json()); //application/json
-
+app.use(bodyParser.json());
 app.use(multer({ storage: storage, fileFilter: fileFilter }).single("image"));
-app.use("/images", express.static(path.join(__dirname, "images"))); //Servir imagenes de manera estatica.
+app.use("/images", express.static(path.join(path.dirname(''), "images")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -63,7 +57,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/users", userRouter.router);
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+app.use("/users", userRouter);
 
 //Relations in the DB
 usersModel.belongsTo(userTypeModel, {
@@ -126,10 +123,10 @@ publicationsModel.hasMany(groupsModel);
 async function startServer() {
   try {
     await sequelize.sync({ force: true });
-    await CreateUserType.typeUser();
+    await CreateUserType();
 
     app.listen(PORT, () => {
-      console.log("Running on port: " + PORT + " xd");
+      console.log("Running on port: " + PORT);
     });
   } catch (err) {
     console.error(err);

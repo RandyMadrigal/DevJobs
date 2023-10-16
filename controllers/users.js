@@ -1,12 +1,11 @@
-require("dotenv").config();
-const usersModel = require("../model/users");
-const userTypeModel = require("../model/userType");
-const { validationResult } = require("express-validator");
-const bcrypt = require("bcrypt");
-const transporter = require("../services/EmailService");
+import { Users as usersModel } from "../model/users.js";
+import { userType as userTypeModel } from "../model/userType.js";
+import { validationResult } from "express-validator";
+import bcrypt from "bcrypt";
+import { sendEmail as transporter } from "../services/EmailService.js";
 
-exports.createUser = async (req, res, next) => {
-  const err = validationResult(req); //valida los campos vacios
+export const createUser = async (req, res, next) => {
+  const err = validationResult(req);
   if (!err.isEmpty()) {
     return res.status(422).json({
       message: "Missing required fields - validation failed",
@@ -106,7 +105,7 @@ exports.createUser = async (req, res, next) => {
   }
 };
 
-exports.activeUser = async (req, res, next) => {
+export const activeUser = async (req, res, next) => {
   const Id = req.params.Id;
   console.log(Id);
 
