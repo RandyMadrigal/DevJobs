@@ -6,6 +6,7 @@ export const typeUser = async () => {
     const userTypes = await userTypeModel.findAll();
 
     if (userTypes.length === 0) {
+      // TODOO: mejorar esta validacion
       const createdUsers = await userTypeModel.bulkCreate(USERTYPES);
       console.log(`Successfully inserted ${createdUsers.length} users types`);
     }
