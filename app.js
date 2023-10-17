@@ -5,32 +5,24 @@ import path from "path";
 import { sequelize } from "./util/database/database.js";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
-import { Users as usersModel } from "./model/users.js";
-import { userType as userTypeModel } from "./model/userType.js";
-import { publications as publicationsModel } from "./model/publications.js";
-import { skills as skillsModel } from "./model/skills.js";
-import { proyects as proyectsModel } from "./model/proyects.js";
-import { groups as groupsModel } from "./model/groups.js";
-import { comments as commentsModel } from "./model/comments.js";
-import { publicationsOptions as publicationsOptionsModel } from "./model/publicationsOptions.js";
-import { reactionsTypes as reactionsTypesModel } from "./model/reactionsTypes.js";
-import userRouter from "./routes/users.js";
+import userRouter from "./routes/users.routes.js";
+import loginRouter from "./routes/login.routes.js";
 import { typeUser as CreateUserType } from "./middleware/CreateTypeUser.js";
-import { body } from "express-validator";
+import { db_relationalas } from "./model/db_relationals.js";
+import { loginValidator } from "./middleware/loginValidator.middleware.js"
 
 dotenv.config();
+
 const PORT = process.env.PORT || "8080";
 const app = express();
+app.use(bodyParser.json());
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "images");
-  },
-  filename: function (req, file, cb) {
-    cb(null, uuidv4() + "-" + file.originalname);
-  },
+  destination: (req, file, cb) => cb(null, "images"),
+  filename: (req, file, cb) => cb(null, uuidv4() + "-" + file.originalname)
 });
 
+// TODO: crteate helper function to check if file is an image
 const fileFilter = (req, file, cb) => {
   if (
     file.mimetype === "image/png" ||
@@ -43,82 +35,21 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-app.use(bodyParser.json());
 app.use(multer({ storage: storage, fileFilter: fileFilter }).single("image"));
 app.use("/images", express.static(path.join(path.dirname(''), "images")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
-  );
+  res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, PATCH, DELETE");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-app.use("/users", userRouter);
 
-//Relations in the DB
-usersModel.belongsTo(userTypeModel, {
-  constraint: true,
-  OnDelete: "CASCADE",
-});
-userTypeModel.hasMany(usersModel);
+app.use("/api/users", loginValidator,userRouter);
+app.use("/api/login", loginRouter);
 
-skillsModel.belongsTo(usersModel, { constraint: true, OnDelete: "CASCADE" });
-usersModel.hasMany(skillsModel);
-
-proyectsModel.belongsTo(usersModel, {
-  constraint: true,
-  OnDelete: "CASCADE",
-});
-usersModel.hasMany(proyectsModel);
-
-publicationsModel.belongsTo(usersModel, {
-  constraint: true,
-  OnDelete: "CASCADE",
-});
-usersModel.hasMany(publicationsModel);
-
-commentsModel.belongsTo(publicationsModel, {
-  constraint: true,
-  OnDelete: "CASCADE",
-});
-publicationsModel.hasMany(commentsModel);
-
-commentsModel.belongsTo(usersModel, {
-  constraint: true,
-  OnDelete: "CASCADE",
-});
-usersModel.hasMany(commentsModel);
-
-reactionsTypesModel.belongsTo(commentsModel, {
-  constraint: true,
-  OnDelete: "CASCADE",
-});
-commentsModel.hasMany(reactionsTypesModel);
-
-reactionsTypesModel.belongsTo(publicationsModel, {
-  constraint: true,
-  OnDelete: "CASCADE",
-});
-publicationsModel.hasMany(reactionsTypesModel);
-
-groupsModel.belongsTo(usersModel, {
-  constraint: true,
-  OnDelete: "CASCADE",
-});
-usersModel.hasMany(groupsModel);
-
-groupsModel.belongsTo(publicationsModel, {
-  constraint: true,
-  OnDelete: "CASCADE",
-});
-publicationsModel.hasMany(groupsModel);
+db_relationalas();
 
 async function startServer() {
   try {
