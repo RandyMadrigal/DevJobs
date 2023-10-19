@@ -107,7 +107,6 @@ export const createUser = async (req, res, next) => {
 
 export const activeUser = async (req, res, next) => {
   const Id = req.params.Id;
-  console.log(Id);
 
   try {
     const findUser = await usersModel.findByPk(Id);

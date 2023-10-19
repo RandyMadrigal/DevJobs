@@ -46,14 +46,14 @@ app.use((req, res, next) => {
 });
 
 
-app.use("/api/users", loginValidator,userRouter);
+app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 
 db_relationalas();
 
 async function startServer() {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: false });
     await CreateUserType();
 
     app.listen(PORT, () => {
