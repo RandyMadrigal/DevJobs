@@ -1,5 +1,5 @@
-import { Users as usersModel } from "../model/users.js";
-import { userType as userTypeModel } from "../model/userType.js";
+import { Users as usersModel } from "../model/users.model.js";
+import { userType as userTypeModel } from "../model/userType.model.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import { sendEmail as transporter } from "../services/EmailService.js";

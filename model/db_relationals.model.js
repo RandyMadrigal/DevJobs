@@ -1,12 +1,12 @@
-import { Users as usersModel } from "./users.js";
-import { userType as userTypeModel } from "./userType.js";
-import { publications as publicationsModel } from "./publications.js";
-import { skills as skillsModel } from "./skills.js";
-import { proyects as proyectsModel } from "./proyects.js";
-import { groups as groupsModel } from "./groups.js";
-import { comments as commentsModel } from "./comments.js";
-import { publicationsOptions as publicationsOptionsModel } from "./publicationsOptions.js";
-import { reactionsTypes as reactionsTypesModel } from "./reactionsTypes.js";
+import { Users as usersModel } from "./users.model.js";
+import { userType as userTypeModel } from "./userType.model.js";
+import { publications as publicationsModel } from "./publications.model.js";
+import { skills as skillsModel } from "./skills.model.js";
+import { proyects as proyectsModel } from "./proyects.model.js";
+import { groups as groupsModel } from "./groups.model.js";
+import { comments as commentsModel } from "./comments.model.js";
+import { publicationsOptions as publicationsOptionsModel } from "./publicationsOptions.model.js";
+import { reactionsTypes as reactionsTypesModel } from "./reactionsTypes.model.js";
 
 export const db_relationalas = () => {
     usersModel.belongsTo(userTypeModel, {

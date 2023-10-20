@@ -1,4 +1,4 @@
-import {userType as userTypeModel} from "../model/userType.js";
+import {userType as userTypeModel} from "../model/userType.model.js";
 import { USERTYPES } from "../util/config.js";
 
 export const typeUser = async () => {
