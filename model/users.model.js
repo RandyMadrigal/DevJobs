@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from "sequelize";
 import { sequelize } from "../util/database/database.js";
 
-export const Users = sequelize.define(
+export const users = sequelize.define(
   "Users",
   {
     Id: {

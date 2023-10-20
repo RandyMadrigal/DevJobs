@@ -1,0 +1,21 @@
+{
+    "USERTYPES": {
+        "ADMIN": "ADMIN",
+        "DEVELOPER": "DEVELOPER",
+        "RECRUITER": "RECRUITER"
+    },
+    "USERADMIN": {
+        "UserName": "ADMIN",
+        "UserNickName": "ADMIN",
+        "UserLastName": "ADMIN",
+        "UserAddress": "IN THIS NODEJS PROYECT",
+        "UserImg": "images/Admin-Profile.png",
+        "UserEmail": "ADMIN@GMAIL.COM",
+        "UserPhone": "8291234567",
+        "UserPassword": "123456*",
+        "isActive": true,
+        "userTypeId": 1
+    }
+}
+
+  

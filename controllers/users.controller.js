@@ -1,93 +1,59 @@
-import { Users as usersModel } from "../model/users.model.js";
+import { users as usersModel } from "../model/users.model.js";
 import { userType as userTypeModel } from "../model/userType.model.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
-import { sendEmail as transporter } from "../services/EmailService.js";
+import { sendEmail as transporter } from "../services/emailService.js";
 
-export const createUser = async (req, res, next) => {
-  const err = validationResult(req);
-  if (!err.isEmpty()) {
-    return res.status(422).json({
-      message: "Missing required fields - validation failed",
-      errors: err.array(),
-    });
-  }
-
-  if (!req.file) {
-    console.log("bad request - no image");
-    //verificar si se envia un archivo en el req
-    return res.status(400).json({ message: "Bad request - no image" });
-  }
-
-  const {
-    UserName,
-    UserNickName,
-    UserLastName,
-    UserAddress,
-    UserEmail,
-    UserPhone,
-    UserPassword,
-    ConfirmPassword,
-    userTypeId,
-  } = req.body;
-
-  const UserImg = req.file.path.replace("\\", "/");
-
-  //validacion de correo en uso
+export const createUser = async (req, res) => {
   try {
-    const existingEmail = await usersModel.findOne({ where: { UserEmail } });
-    if (existingEmail) {
-      return res
-        .status(400)
-        .json({ message: "Bad request - Email is already in use" });
+    const errors = validationResult(req);
+    if (!errors.isEmpty() || !req.file) {
+      return res.status(422).json({ message: "Validation failed" });
     }
 
-    //validacion de nickName en uso
-    const existingNickName = await usersModel.findOne({
-      where: { UserNickName },
-    });
-    if (existingNickName) {
-      return res
-        .status(400)
-        .json({ message: "Bad request - UserNickName is already in use" });
+    const {
+      UserName,
+      UserNickName,
+      UserLastName,
+      UserAddress,
+      UserEmail,
+      UserPhone,
+      UserPassword,
+      ConfirmPassword,
+      userTypeId,
+    } = req.body;
+
+    const [existingEmail, existingNickName] = await Promise.all([
+      usersModel.findOne({ where: { UserEmail } }),
+      usersModel.findOne({ where: { UserNickName } }),
+    ]);
+
+    if (existingEmail || existingNickName || UserPassword !== ConfirmPassword) {
+      return res.status(400).json({ message: "Invalid user data" });
     }
 
-    //valida si las contraseñas no coinciden
-    if (UserPassword !== ConfirmPassword) {
-      return res.status(400).json({ message: "Passwords do not match" });
-    }
-
-    //validacion del tipo de usuario
     const userType = await userTypeModel.findByPk(userTypeId);
-    if (!userType) {
-      return res.status(404).json({
-        message: "The specified user type does not exist in the database",
-      });
+    if (!userType || userTypeId === 1 || userTypeId === "ADMIN") {
+      return res.status(400).json({ message: "Invalid user type" });
     }
 
-    if (userTypeId == 1 || userTypeId === "ADMIN") {
-      return res.status(400).json({ message: "The user can't be level ADMIN" });
-    }
-
-    //hash password
     const hashUserPassword = await bcrypt.hash(UserPassword, 12);
 
+    const UserImg = req.file.path.replace("\\", "/");
+
     const result = await usersModel.create({
-      UserName: UserName,
-      UserNickName: UserNickName,
-      UserLastName: UserLastName,
-      UserAddress: UserAddress,
-      UserImg: UserImg,
-      UserEmail: UserEmail,
-      UserPhone: UserPhone,
+      UserName,
+      UserNickName,
+      UserLastName,
+      UserAddress,
+      UserImg,
+      UserEmail,
+      UserPhone,
       UserPassword: hashUserPassword,
-      userTypeId: userTypeId,
+      userTypeId,
     });
 
-    console.log(result);
-
     const sendEmail = await transporter(
-      //Enviar correo
       UserEmail,
       process.env.CORREO,
       UserNickName,
@@ -113,12 +79,11 @@ export const activeUser = async (req, res, next) => {
 
     if (!findUser) {
       return res.status(404).json({
-        message:
-          "El Usurario con el ID suministrado no se encuentra en la Base de datos",
+        message: "User is not found in the database",
       });
     }
 
-    if (findUser.isActive == true) {
+    if (findUser.isActive) {
       return res.status(409).json({
         message: "The user is already active",
       });
@@ -134,7 +99,7 @@ export const activeUser = async (req, res, next) => {
       updateUser: updateUser.dataValues,
     });
   } catch (error) {
-    console.log("Error al activar el usuario");
+    console.log("Error while activating the user");
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };

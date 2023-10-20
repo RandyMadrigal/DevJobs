@@ -7,19 +7,22 @@ import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import userRouter from "./routes/users.routes.js";
 import loginRouter from "./routes/login.routes.js";
-import { typeUser as CreateUserType } from "./middleware/CreateTypeUser.middleware.js";
+import { typeUser as createUserType } from "./middleware/createTypeUser.middleware.js";
+import { adminUser as createAdminUser } from "./middleware/createAdminUser.middleware.js";
 import { db_relationalas } from "./model/db_relationals.model.js";
-import { loginValidator } from "./middleware/loginValidator.middleware.js"
+import { loginValidator } from "./middleware/loginValidator.middleware.js";
 
 dotenv.config();
 
 const PORT = process.env.PORT || "8080";
+
 const app = express();
+
 app.use(bodyParser.json());
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "images"),
-  filename: (req, file, cb) => cb(null, uuidv4() + "-" + file.originalname)
+  filename: (req, file, cb) => cb(null, uuidv4() + "-" + file.originalname),
 });
 
 // TODO: crteate helper function to check if file is an image
@@ -36,15 +39,17 @@ const fileFilter = (req, file, cb) => {
 };
 
 app.use(multer({ storage: storage, fileFilter: fileFilter }).single("image"));
-app.use("/images", express.static(path.join(path.dirname(''), "images")));
+app.use("/images", express.static(path.join(path.dirname(""), "images")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, PATCH, DELETE");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+  );
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
-
 
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
@@ -54,7 +59,8 @@ db_relationalas();
 async function startServer() {
   try {
     await sequelize.sync({ force: false });
-    await CreateUserType();
+    await createUserType();
+    await createAdminUser();
 
     app.listen(PORT, () => {
       console.log("Running on port: " + PORT);

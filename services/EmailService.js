@@ -1,7 +1,6 @@
 import { config } from "dotenv";
 import nodemailer from "nodemailer";
 
-
 export const sendEmail = async (to, from, UserNickName, Id) => {
   try {
     //Create transporter
