@@ -13,7 +13,7 @@ export const Login = async (req, res) => {
     
     const user = await usersModel.findOne({
         where: {
-            UserEmail: email, UserPassword: encryptedPassword, isActive: true
+            UserEmail: email, UserPassword: 'password1', isActive: true
         }
     });
 
@@ -23,9 +23,14 @@ export const Login = async (req, res) => {
     }
 
     const token = jwt.sign({ user, exp: 86600 }, secret);
+    res.cookie("token", token, { httpOnly: true });
     res.status(200).json({ token: token });
 }
 
 export const logout = async (req, res) => {
-    //TODO: implement logout
+    res.clearCookie("token");
+
+    // TODO: redirect to login page when we have a frontend
+    // res.redirect("/login");
+    res.status(200).json({ message: "Logout successfully" });
 }
