@@ -7,8 +7,8 @@ import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import userRouter from "./routes/users.routes.js";
 import loginRouter from "./routes/login.routes.js";
-import { typeUser as CreateUserType } from "./middleware/CreateTypeUser.js";
-import { db_relationalas } from "./model/db_relationals.js";
+import { typeUser as CreateUserType } from "./middleware/CreateTypeUser.middleware.js";
+import { db_relationalas } from "./model/db_relationals.model.js";
 import { loginValidator } from "./middleware/loginValidator.middleware.js"
 
 dotenv.config();

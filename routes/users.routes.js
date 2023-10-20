@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body, check } from "express-validator";
-import {createUser, activeUser} from "../controllers/users.js";
+import {createUser, activeUser} from "../controllers/users.controller.js";
 
 const router = Router();
 
