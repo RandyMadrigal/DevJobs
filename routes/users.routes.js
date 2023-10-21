@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body, check } from "express-validator";
-import {createUser, activeUser} from "../controllers/users.controller.js";
+import * as usersController from "../controllers/users.controller.js";
 
 const router = Router();
 
@@ -25,9 +25,9 @@ router.post(
     body("UserPassword").trim().notEmpty().isLength({ min: 5, max: 120 }),
     body("ConfirmPassword").trim().notEmpty().isLength({ min: 5, max: 120 }),
   ],
-  createUser,
-
-  router.put("/activeUser/:Id", activeUser)
+  usersController.createUser
 );
+
+router.put("/activeUser/:Id", usersController.activeUser);
 
 export default router;

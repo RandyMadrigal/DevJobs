@@ -55,9 +55,8 @@ export const createUser = async (req, res) => {
 
     const sendEmail = await transporter(
       UserEmail,
-      process.env.CORREO,
-      UserNickName,
-      result.Id
+      `Welcome to DevJobs Community ${UserNickName}`,
+      `<h3> Welcome ${UserNickName}<h3> <p>Para activar tu cuenta sigue el siguiente enlace: <a href="http://localhost:8088/Api/users/activeUser/${result.Id}" target="_blank"> ACTIVAR CUENTA </a> <p></p>`
     );
 
     return res.status(200).json({

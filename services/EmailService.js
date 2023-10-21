@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import nodemailer from "nodemailer";
 
-export const sendEmail = async (to, from, UserNickName, Id) => {
+export const sendEmail = async (to, subject, content) => {
   try {
     //Create transporter
     const transporter = nodemailer.createTransport({
@@ -18,11 +18,10 @@ export const sendEmail = async (to, from, UserNickName, Id) => {
     });
 
     const message = {
-      from: from,
+      from: config.CORREO || "redsocialx24@gmail.com",
       to: to,
-      subject: "Welcome to Devjobs Community :D",
-      html: `<h3> Welcome ${UserNickName}<h3>
-      <p>Para activar tu cuenta sigue el siguiente enlace: <a href="http://localhost:3000/users/activeUser/${Id}" target="_blank"> ACTIVAR CUENTA </a> <p>`,
+      subject: subject,
+      html: content,
     };
 
     //Send Email
