@@ -49,13 +49,23 @@ export const forgotPassword = async (req, res, next) => {
     const user = await usersModel.findOne({ where: { UserEmail: UserEmail } });
 
     if (user) {
+      const token = jwt.sign({ UserEmail, expireIn: 600 }, secret);
+
+      const saveToken = await usersModel.update(
+        { token: token },
+        { where: { UserEmail: UserEmail } }
+      );
+
       const sendEmail = await transporter(
+        //TODO: hacer en el frontend un ruta para el cambio de la contraseña
         UserEmail,
         `forgot your password? No problem! ${user.UserNickName}`,
-        `<p>To change your password enter the following code: ${user.Id}</p>`
+        `<p>sigue el enlace: <a href="#">Ruta para cambiar la contraseña</a></p>`
       );
+
       return res.status(200).json({
-        message: "code sent to email",
+        message: "Email send",
+        token: token,
       });
     } else {
       return res.status(404).json({
@@ -69,24 +79,29 @@ export const forgotPassword = async (req, res, next) => {
 };
 
 export const resetPassword = async (req, res, next) => {
-  const { code, UserPassword, ConfirmPassword } = req.body;
+  const { token, UserPassword, ConfirmPassword } = req.body;
 
   try {
     if (UserPassword !== ConfirmPassword) {
       return res.status(400).json({ message: "Invalid user data" });
     }
 
-    const user = usersModel.findOne({ where: { Id: code } });
+    const decoded = jwt.verify(token, secret);
+
+    const user = await usersModel.findOne({
+      where: { UserEmail: decoded.UserEmail },
+    });
+
     if (user) {
       const hashUserPassword = await bcrypt.hash(UserPassword, 12);
 
       const updateUser = await usersModel.update(
-        { UserPassword: hashUserPassword },
-        { where: { Id: code } }
+        { UserPassword: hashUserPassword, token: null },
+        { where: { Id: user.Id } }
       );
 
       return res.status(200).json({
-        message: "User Updated successfully",
+        message: "password Updated successfully",
         updateUser: updateUser.dataValues,
       });
     } else {
@@ -95,7 +110,14 @@ export const resetPassword = async (req, res, next) => {
       });
     }
   } catch (err) {
-    console.log("error changing password" + err);
-    return res.status(500).json({ message: "Internal Server Error" });
+    console.log("error changing password " + err);
+
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token Caducado" });
+    } else {
+      return res
+        .status(500)
+        .json({ message: "no valid token / Internal Server Error" });
+    }
   }
 };

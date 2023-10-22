@@ -55,6 +55,10 @@ export const users = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    token: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
   },
 
   {

@@ -9,8 +9,9 @@ import dotenv from "dotenv";
 export const createUser = async (req, res) => {
   try {
     const errors = validationResult(req);
+
     if (!errors.isEmpty() || !req.file) {
-      return res.status(422).json({ message: "Validation failed" });
+      return res.status(422).json({ message: errors.array() });
     }
 
     const {
@@ -63,7 +64,7 @@ export const createUser = async (req, res) => {
     const sendEmail = await transporter(
       UserEmail,
       `Welcome to DevJobs Community ${UserNickName}`,
-      `<h3> Welcome ${UserNickName}<h3> <p>Para activar tu cuenta sigue el siguiente enlace: <a href="http://localhost:8088/Api/users/activeUser/?token=${token}"> ACTIVAR CUENTA </a> ${token}</p>`
+      `<h3> Welcome ${UserNickName}<h3> <p>Para activar tu cuenta sigue el siguiente enlace: <a href="http://localhost:8088/Api/users/activeUser/?token=${token}"> ACTIVAR CUENTA </a></p>`
     );
 
     return res.status(200).json({
@@ -78,6 +79,12 @@ export const createUser = async (req, res) => {
 };
 
 export const activeUser = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ message: errors.array() });
+  }
+
   const token = req.query.token;
 
   try {
