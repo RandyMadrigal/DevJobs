@@ -3,6 +3,8 @@ import { userType as userTypeModel } from "../model/userType.model.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import { sendEmail as transporter } from "../services/emailService.js";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
 export const createUser = async (req, res) => {
   try {
@@ -53,10 +55,15 @@ export const createUser = async (req, res) => {
       userTypeId,
     });
 
+    const token = jwt.sign(
+      { result, expireIn: 86400 },
+      process.env.PRIVATE_KEY
+    );
+
     const sendEmail = await transporter(
       UserEmail,
       `Welcome to DevJobs Community ${UserNickName}`,
-      `<h3> Welcome ${UserNickName}<h3> <p>Para activar tu cuenta sigue el siguiente enlace: <a href="http://localhost:8088/Api/users/activeUser/${result.Id}" target="_blank"> ACTIVAR CUENTA </a> <p></p>`
+      `<h3> Welcome ${UserNickName}<h3> <p>Para activar tu cuenta sigue el siguiente enlace: <a href="http://localhost:8088/Api/users/activeUser/?token=${token}"> ACTIVAR CUENTA </a> ${token}</p>`
     );
 
     return res.status(200).json({
@@ -71,10 +78,12 @@ export const createUser = async (req, res) => {
 };
 
 export const activeUser = async (req, res, next) => {
-  const Id = req.params.Id;
+  const token = req.query.token;
 
   try {
-    const findUser = await usersModel.findByPk(Id);
+    const decoded = jwt.verify(token, process.env.PRIVATE_KEY);
+
+    const findUser = await usersModel.findByPk(decoded.result.Id);
 
     if (!findUser) {
       return res.status(404).json({
@@ -99,6 +108,13 @@ export const activeUser = async (req, res, next) => {
     });
   } catch (error) {
     console.log("Error while activating the user");
-    return res.status(500).json({ message: "Internal Server Error" });
+
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token Caducado" });
+    } else {
+      return res
+        .status(500)
+        .json({ message: "no valid token / Internal Server Error" });
+    }
   }
 };

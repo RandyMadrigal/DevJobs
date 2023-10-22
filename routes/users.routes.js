@@ -28,6 +28,6 @@ router.post(
   usersController.createUser
 );
 
-router.put("/activeUser/:Id", usersController.activeUser);
+router.put("/activeUser", usersController.activeUser);
 
 export default router;
