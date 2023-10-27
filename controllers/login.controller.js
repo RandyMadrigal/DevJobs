@@ -29,7 +29,7 @@ export const Login = async (req, res) => {
   if (passwordMatch) {
     const token = jwt.sign({ user, exp: 86600 }, secret);
     res.cookie("token", token, { httpOnly: true });
-    res.status(200).json({ token: token });
+    res.status(200).json({ token: token, user: user });
   } else {
     res.status(400).json({ message: "Wrong email or password" });
   }

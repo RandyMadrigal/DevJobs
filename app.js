@@ -11,6 +11,8 @@ import { typeUser as createUserType } from "./middleware/createTypeUser.middlewa
 import { adminUser as createAdminUser } from "./middleware/createAdminUser.middleware.js";
 import { db_relationalas } from "./model/db_relationals.model.js";
 import { loginValidator } from "./middleware/loginValidator.middleware.js";
+import cors from "cors";
+import morgan from "morgan";
 
 dotenv.config();
 
@@ -18,6 +20,8 @@ const PORT = process.env.PORT || "8080";
 
 const app = express();
 
+app.use(morgan("dev"));
+app.use(cors());
 app.use(bodyParser.json());
 
 const storage = multer.diskStorage({
