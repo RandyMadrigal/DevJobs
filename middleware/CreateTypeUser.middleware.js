@@ -9,8 +9,6 @@ export const typeUser = async () => {
 
     const userTypes = await userTypeModel.findAll();
 
-    console.log(USERTYPES);
-
     if (userTypes.length === 0) {
       const createdUsers = await userTypeModel.bulkCreate(USERTYPES);
       if (createdUsers) {

@@ -24,8 +24,7 @@ export const adminUser = async () => {
     });
 
     if (created) {
-      console.log(user.dataValues);
-      console.log(`Successfully created`);
+      console.log(`Successfully created an user type ADMIN`);
     } else {
       console.log("the system have an admin user");
     }

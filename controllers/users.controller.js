@@ -6,6 +6,8 @@ import { sendEmail as transporter } from "../services/emailService.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
+dotenv.config();
+
 export const createUser = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -114,7 +116,7 @@ export const activeUser = async (req, res, next) => {
       updateUser: updateUser.dataValues,
     });
   } catch (error) {
-    console.log("Error while activating the user");
+    console.log("Error while activating the user" + error);
 
     if (err.name === "TokenExpiredError") {
       return res.status(401).json({ message: "Token Caducado" });
