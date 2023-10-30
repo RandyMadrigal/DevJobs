@@ -20,7 +20,7 @@ export const Login = async (req, res) => {
   });
 
   if (!user) {
-    res.status(400).json({ message: "Wrong email or password" });
+    res.status(200).json({token:false, user: null, message: "Wrong email or password" });
     return;
   }
 
@@ -29,9 +29,9 @@ export const Login = async (req, res) => {
   if (passwordMatch) {
     const token = jwt.sign({ user, exp: 86600 }, secret);
     res.cookie("token", token, { httpOnly: true });
-    res.status(200).json({ token: token, user: user });
+    res.status(200).json({ token: token, user: user, message: "Login successful" });
   } else {
-    res.status(400).json({ message: "Wrong email or password" });
+    res.status(200).json({token:false, user: null, message: "Wrong email or password" });
   }
 };
 
