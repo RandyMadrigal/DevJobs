@@ -62,7 +62,7 @@ db_relationalas();
 
 async function startServer() {
   try {
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ force: true });
     await createUserType();
     await createAdminUser();
 

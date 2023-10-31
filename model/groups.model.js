@@ -23,7 +23,7 @@ export const groups = sequelize.define(
 
     groupImg: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
   },
 

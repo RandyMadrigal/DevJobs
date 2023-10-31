@@ -23,7 +23,7 @@ export const skills = sequelize.define(
 
     skillIcon: {
       type: Sequelize.STRING(500),
-      allowNull: false,
+      allowNull: true,
     },
 
     skillParent: {

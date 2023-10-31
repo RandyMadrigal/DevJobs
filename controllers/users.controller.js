@@ -12,7 +12,7 @@ export const createUser = async (req, res) => {
   try {
     const errors = validationResult(req);
 
-    if (!errors.isEmpty() || !req.file) {
+    if (!errors.isEmpty() /*|| !req.file*/) {
       return res.status(422).json({ message: errors.array() });
     }
 
@@ -44,7 +44,10 @@ export const createUser = async (req, res) => {
 
     const hashUserPassword = await bcrypt.hash(UserPassword, 12);
 
-    const UserImg = req.file.path.replace("\\", "/");
+    //para no generar un error a la hora de no enviar una Img
+    const UserImg = req.file
+      ? req.file.path.replace("\\", "/")
+      : "../images/Admin-Profile.png";
 
     const result = await usersModel.create({
       UserName,
