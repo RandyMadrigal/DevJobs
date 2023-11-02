@@ -6,11 +6,13 @@ import { sendEmail as transporter } from "../services/emailService.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
+dotenv.config();
+
 export const createUser = async (req, res) => {
   try {
     const errors = validationResult(req);
 
-    if (!errors.isEmpty() || !req.file) {
+    if (!errors.isEmpty() /*|| !req.file*/) {
       return res.status(422).json({ message: errors.array() });
     }
 
@@ -26,6 +28,12 @@ export const createUser = async (req, res) => {
       userTypeId,
     } = req.body;
 
+    const USER_type = {
+      "DEVELOPER": 2,
+      "RECRUITER": 3
+    }
+  
+
     const [existingEmail, existingNickName] = await Promise.all([
       usersModel.findOne({ where: { UserEmail } }),
       usersModel.findOne({ where: { UserNickName } }),
@@ -35,14 +43,17 @@ export const createUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid user data" });
     }
 
-    const userType = await userTypeModel.findByPk(userTypeId);
+    const userType = await userTypeModel.findByPk(USER_type[userTypeId]);
     if (!userType || userTypeId === 1 || userTypeId === "ADMIN") {
       return res.status(400).json({ message: "Invalid user type" });
     }
 
     const hashUserPassword = await bcrypt.hash(UserPassword, 12);
 
-    const UserImg = req.file.path.replace("\\", "/");
+    //para no generar un error a la hora de no enviar una Img
+    const UserImg = req.file
+      ? req.file.path.replace("\\", "/")
+      : "../images/Admin-Profile.png";
 
     const result = await usersModel.create({
       UserName,
@@ -53,7 +64,7 @@ export const createUser = async (req, res) => {
       UserEmail,
       UserPhone,
       UserPassword: hashUserPassword,
-      userTypeId,
+      userTypeId: USER_type[userTypeId],
     });
 
     const token = jwt.sign(
@@ -114,7 +125,7 @@ export const activeUser = async (req, res, next) => {
       updateUser: updateUser.dataValues,
     });
   } catch (error) {
-    console.log("Error while activating the user");
+    console.log("Error while activating the user" + error);
 
     if (err.name === "TokenExpiredError") {
       return res.status(401).json({ message: "Token Caducado" });

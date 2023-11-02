@@ -1,5 +1,7 @@
-import { config } from "dotenv";
+import dotenv from "dotenv";
 import nodemailer from "nodemailer";
+
+dotenv.config();
 
 export const sendEmail = async (to, subject, content) => {
   try {
@@ -18,7 +20,7 @@ export const sendEmail = async (to, subject, content) => {
     });
 
     const message = {
-      from: config.CORREO || "redsocialx24@gmail.com",
+      from: process.env.CORREO || "redsocialx24@gmail.com",
       to: to,
       subject: subject,
       html: content,

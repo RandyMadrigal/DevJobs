@@ -1,10 +1,17 @@
 import { Sequelize } from "sequelize";
 import path from "path";
+import dotenv from "dotenv";
 
-// TODO: crear un archivo .env y agregar las variables de entorno
-export const sequelize = new Sequelize("devjobs", "root", "123456", {
-  host: "localhost",
-  dialect: "mysql",
-  port: 3306,
-  logging: false,
-});
+dotenv.config();
+
+export const sequelize = new Sequelize(
+  "devjobs",
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: "localhost",
+    dialect: "mysql",
+    port: 3306,
+    logging: false,
+  }
+);

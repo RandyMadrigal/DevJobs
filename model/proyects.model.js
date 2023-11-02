@@ -33,7 +33,7 @@ export const proyects = sequelize.define(
 
     proyectImages: {
       type: Sequelize.STRING(700),
-      allowNull: false,
+      allowNull: true,
     },
   },
 

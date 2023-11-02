@@ -38,7 +38,7 @@ export const publications = sequelize.define(
 
     publicationsImg: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
   },
 
