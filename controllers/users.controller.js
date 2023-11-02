@@ -29,10 +29,9 @@ export const createUser = async (req, res) => {
     } = req.body;
 
     const USER_type = {
-      "DEVELOPER": 2,
-      "RECRUITER": 3
-    }
-  
+      DEVELOPER: 2,
+      RECRUITER: 3,
+    };
 
     const [existingEmail, existingNickName] = await Promise.all([
       usersModel.findOne({ where: { UserEmail } }),
