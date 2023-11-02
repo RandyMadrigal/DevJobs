@@ -14,11 +14,13 @@ export const skills = sequelize.define(
     skillName: {
       type: Sequelize.STRING(120),
       allowNull: false,
+      unique: true,
     },
 
     skillShortName: {
       type: Sequelize.STRING(10),
       allowNull: false,
+      unique: true,
     },
 
     skillIcon: {
@@ -28,7 +30,7 @@ export const skills = sequelize.define(
 
     skillParent: {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
   },
 

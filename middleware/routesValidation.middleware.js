@@ -23,3 +23,8 @@ export const createUserValidation = [
 export const activeUserValidation = [
   query("token").notEmpty().withMessage("Token is required"),
 ];
+
+export const createSkillValidation = [
+  body("skillName").trim().notEmpty().isLength({ min: 5, max: 120 }),
+  body("skillShortName").trim().notEmpty().isLength({ min: 5, max: 120 }),
+];

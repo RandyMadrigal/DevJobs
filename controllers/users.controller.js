@@ -28,6 +28,11 @@ export const createUser = async (req, res) => {
       userTypeId,
     } = req.body;
 
+    const USER_type = {
+      DEVELOPER: 2,
+      RECRUITER: 3,
+    };
+
     const [existingEmail, existingNickName] = await Promise.all([
       usersModel.findOne({ where: { UserEmail } }),
       usersModel.findOne({ where: { UserNickName } }),
@@ -37,7 +42,7 @@ export const createUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid user data" });
     }
 
-    const userType = await userTypeModel.findByPk(userTypeId);
+    const userType = await userTypeModel.findByPk(USER_type[userTypeId]);
     if (!userType || userTypeId === 1 || userTypeId === "ADMIN") {
       return res.status(400).json({ message: "Invalid user type" });
     }
@@ -58,7 +63,7 @@ export const createUser = async (req, res) => {
       UserEmail,
       UserPhone,
       UserPassword: hashUserPassword,
-      userTypeId,
+      userTypeId: USER_type[userTypeId],
     });
 
     const token = jwt.sign(
