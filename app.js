@@ -8,6 +8,8 @@ import { v4 as uuidv4 } from "uuid";
 import userRouter from "./routes/users.routes.js";
 import loginRouter from "./routes/login.routes.js";
 import skillsRouter from "./routes/skills.routes.js";
+import proyectsRouter from "./routes/proyects.routes.js";
+
 import { typeUser as createUserType } from "./middleware/createTypeUser.middleware.js";
 import { adminUser as createAdminUser } from "./middleware/createAdminUser.middleware.js";
 import { db_relationalas } from "./model/db_relationals.model.js";
@@ -59,6 +61,7 @@ app.use((req, res, next) => {
 app.use("/api/login", loginRouter);
 app.use("/api/users", userRouter);
 app.use("/api/skills", skillsRouter);
+app.use("/api/proyects", proyectsRouter);
 
 db_relationalas();
 
