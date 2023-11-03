@@ -20,7 +20,9 @@ export const Login = async (req, res) => {
   });
 
   if (!user) {
-    res.status(200).json({token:false, user: null, message: "Wrong email or password" });
+    res
+      .status(200)
+      .json({ token: false, user: null, message: "Wrong email or password" });
     return;
   }
 
@@ -29,9 +31,13 @@ export const Login = async (req, res) => {
   if (passwordMatch) {
     const token = jwt.sign({ user, exp: 86600 }, secret);
     res.cookie("token", token, { httpOnly: true });
-    res.status(200).json({ token: token, user: user, message: "Login successful" });
+    res
+      .status(200)
+      .json({ token: token, user: user, message: "Login successful" });
   } else {
-    res.status(200).json({token:false, user: null, message: "Wrong email or password" });
+    res
+      .status(200)
+      .json({ token: false, user: null, message: "Wrong email or password" });
   }
 };
 
@@ -60,7 +66,16 @@ export const forgotPassword = async (req, res, next) => {
         //TODO: hacer en el frontend un ruta para el cambio de la contraseña
         UserEmail,
         `forgot your password? No problem! ${user.UserNickName}`,
-        `<p>sigue el enlace: <a href="#">Ruta para cambiar la contraseña</a></p>`
+        `
+        <ul>
+          <li> 
+          Link: <a href="http://localhost:4200/session/changePassword">Cambiar contraseña</a>
+          </li>
+          <li>
+          Token: ${token}
+          </li>
+        </ul>  
+        `
       );
 
       return res.status(200).json({
