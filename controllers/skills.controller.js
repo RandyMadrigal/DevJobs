@@ -2,7 +2,7 @@ import { skills as skillModel } from "../model/skills.model.js";
 
 //TODO mejorar el manejo de las imagenes y Agregar validaciones.
 
-export const getSkill = async (req, res) => {
+export const Skill = async (req, res) => {
   try {
     const Id = req.body.Id;
 
@@ -38,11 +38,12 @@ export const createSkill = async (req, res) => {
   try {
     const { skillName, skillShortName, skillParent, UserId } = req.body;
 
-    const existingSkill = await skillModel.findOne({
-      where: { SkillName: skillName },
-    });
+    const [existingSkill, existingShortName] = await Promise.all([
+      skillModel.findOne({ where: { skillName } }),
+      skillModel.findOne({ where: { skillShortName } }),
+    ]);
 
-    if (existingSkill) {
+    if (existingSkill || existingShortName) {
       return res.status(400).json({ message: "Skill already exist" });
     }
 

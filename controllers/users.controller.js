@@ -1,4 +1,5 @@
 import { users as usersModel } from "../model/users.model.js";
+
 import { userType as userTypeModel } from "../model/userType.model.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";

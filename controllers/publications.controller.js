@@ -2,7 +2,7 @@ import { publications as publicationModel } from "../model/publications.model.js
 
 //TODO mejorar el manejo de las imagenes y Agregar validaciones.
 
-export const getPublication = async (req, res) => {
+export const Publication = async (req, res) => {
   try {
     const Id = req.body.Id;
 
