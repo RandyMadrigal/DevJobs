@@ -2,7 +2,7 @@ import { skills as skillModel } from "../model/skills.model.js";
 
 //TODO mejorar el manejo de las imagenes y Agregar validaciones.
 
-export const getSkill = async (req, res) => {
+export const Skill = async (req, res) => {
   try {
     const Id = req.body.Id;
 

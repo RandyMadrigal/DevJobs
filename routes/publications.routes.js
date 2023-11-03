@@ -3,7 +3,7 @@ import * as publicationController from "../controllers/publications.controller.j
 
 const router = Router();
 
-router.get("/getPublication/:Id", publicationController.getPublication);
+router.post("/Publication", publicationController.Publication);
 
 router.get("/getPublications", publicationController.getPublications);
 

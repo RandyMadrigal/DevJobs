@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/getSkills", skillsController.getSkills);
 
-router.post("/Skill", skillsController.getSkill);
+router.post("/Skill", skillsController.Skill);
 
 router.post(
   "/createSkill",
