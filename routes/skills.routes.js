@@ -4,9 +4,9 @@ import { createSkillValidation } from "../middleware/routesValidation.middleware
 
 const router = Router();
 
-router.get("/getSkill/:Id", skillsController.getSkill);
-
 router.get("/getSkills", skillsController.getSkills);
+
+router.post("/Skill", skillsController.getSkill);
 
 router.post(
   "/createSkill",

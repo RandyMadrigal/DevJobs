@@ -38,11 +38,12 @@ export const createSkill = async (req, res) => {
   try {
     const { skillName, skillShortName, skillParent, UserId } = req.body;
 
-    const existingSkill = await skillModel.findOne({
-      where: { SkillName: skillName },
-    });
+    const [existingSkill, existingShortName] = await Promise.all([
+      skillModel.findOne({ where: { skillName } }),
+      skillModel.findOne({ where: { skillShortName } }),
+    ]);
 
-    if (existingSkill) {
+    if (existingSkill || existingShortName) {
       return res.status(400).json({ message: "Skill already exist" });
     }
 
