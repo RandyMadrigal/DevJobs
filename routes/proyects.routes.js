@@ -3,7 +3,7 @@ import * as proyectController from "../controllers/proyects.controller.js";
 
 const router = Router();
 
-router.get("/getProyect/:Id", proyectController.getProyect);
+router.post("/Proyect", proyectController.Proyect);
 
 router.get("/getProyects", proyectController.getProyects);
 

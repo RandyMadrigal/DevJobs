@@ -2,7 +2,7 @@ import { proyects as proyectModel } from "../model/proyects.model.js";
 
 //TODO mejorar el manejo de las imagenes y Agregar validaciones.
 
-export const getProyect = async (req, res) => {
+export const Proyect = async (req, res) => {
   try {
     const Id = req.body.Id;
 
