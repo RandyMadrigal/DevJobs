@@ -2,9 +2,8 @@ import { users as usersModel } from "../model/users.model.js";
 import { skills as skillModel } from "../model/skills.model.js";
 import { publications as publicationModel } from "../model/publications.model.js";
 import { proyects as proyectsModel } from "../model/proyects.model.js";
-
 import { sendEmail as transporter } from "../services/emailService.js";
-
+import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -14,40 +13,51 @@ dotenv.config();
 const secret = process.env.PRIVATE_KEY;
 
 export const Login = async (req, res) => {
-  const { UserEmail, UserPassword } = req.body;
+  try {
+    const errors = validationResult(req);
 
-  const user = await usersModel.findOne({
-    where: {
-      UserEmail: UserEmail,
-      isActive: true,
-    },
-    include: [
-      { model: skillModel },
-      { model: publicationModel },
-      { model: proyectsModel },
-    ],
-  });
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ message: errors.array() });
+    }
 
-  if (!user) {
-    res
-      .status(200)
-      .json({ token: false, user: null, message: "Wrong email or password" });
-    return;
-  }
+    const { UserEmail, UserPassword } = req.body;
 
-  const passwordMatch = await bcrypt.compare(UserPassword, user.UserPassword);
+    const user = await usersModel.findOne({
+      where: {
+        UserEmail: UserEmail,
+        isActive: true,
+      },
+      include: [
+        { model: skillModel },
+        { model: publicationModel },
+        { model: proyectsModel },
+      ],
+    });
 
-  if (passwordMatch) {
-    const token = jwt.sign({ user, exp: 86600 }, secret);
-    res.cookie("token", token, { httpOnly: true });
+    if (!user) {
+      res
+        .status(200)
+        .json({ token: false, user: null, message: "Wrong email or password" });
+      return;
+    }
 
-    res
-      .status(200)
-      .json({ token: token, user: user, message: "Login successful" });
-  } else {
-    res
-      .status(200)
-      .json({ token: false, user: null, message: "Wrong email or password" });
+    const passwordMatch = await bcrypt.compare(UserPassword, user.UserPassword);
+
+    if (passwordMatch) {
+      const token = jwt.sign({ user, exp: 86600 }, secret);
+      res.cookie("token", token, { httpOnly: true });
+
+      res
+        .status(200)
+        .json({ token: token, user: user, message: "Login successful" });
+    } else {
+      res
+        .status(200)
+        .json({ token: false, user: null, message: "Wrong email or password" });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 

@@ -14,6 +14,7 @@ export const groups = sequelize.define(
     title: {
       type: Sequelize.STRING,
       allowNull: false,
+      unique: true,
     },
 
     description: {

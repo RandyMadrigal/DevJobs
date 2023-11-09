@@ -1,4 +1,5 @@
 import { publications as publicationModel } from "../model/publications.model.js";
+import { validationResult } from "express-validator";
 
 //TODO mejorar el manejo de las imagenes y Agregar validaciones.
 
@@ -36,6 +37,12 @@ export const getPublications = async (req, res) => {
 
 export const createPublication = async (req, res) => {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ message: errors.array() });
+    }
+
     const { title, description, requirements, benefits, address, UserId } =
       req.body;
 

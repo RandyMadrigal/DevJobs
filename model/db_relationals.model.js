@@ -60,9 +60,9 @@ export const db_relationalas = () => {
   });
   usersModel.hasMany(groupsModel);
 
-  groupsModel.belongsTo(publicationsModel, {
+  publicationsModel.belongsTo(groupsModel, {
     constraint: true,
     OnDelete: "CASCADE",
   });
-  publicationsModel.hasMany(groupsModel);
+  groupsModel.hasMany(publicationsModel);
 };
