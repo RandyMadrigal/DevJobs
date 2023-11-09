@@ -1,4 +1,5 @@
 import { skills as skillModel } from "../model/skills.model.js";
+import { validationResult } from "express-validator";
 
 //TODO mejorar el manejo de las imagenes y Agregar validaciones.
 
@@ -36,6 +37,12 @@ export const getSkills = async (req, res) => {
 
 export const createSkill = async (req, res) => {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ message: errors.array() });
+    }
+
     const { skillName, skillShortName, skillParent, UserId } = req.body;
 
     const [existingSkill, existingShortName] = await Promise.all([

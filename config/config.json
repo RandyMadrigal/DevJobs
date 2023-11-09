@@ -15,7 +15,13 @@
         "UserPassword": "123456*",
         "isActive": true,
         "userTypeId": 1
+    },
+    "MAIN_GROUP":{
+        "title":"GRUPO PRINCIPAL",
+        "description": "Grupo creado por el ADMIN de este proyecto",
+        "groupImg":"images/Admin-Profile.png"
     }
+    
 }
 
   

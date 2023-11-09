@@ -1,18 +1,19 @@
+import { groups as groupsModel } from "../model/groups.model.js";
 import { publications as publicationModel } from "../model/publications.model.js";
 import { validationResult } from "express-validator";
 
 //TODO mejorar el manejo de las imagenes y Agregar validaciones.
 
-export const Publication = async (req, res) => {
+export const group = async (req, res) => {
   try {
     const Id = req.body.Id;
 
-    const publication = await publicationModel.findOne({ where: { Id: Id } });
+    const group = await groupsModel.findOne({ where: { Id: Id } });
 
-    if (!publication) {
+    if (!group) {
       return res.status(204).json({ message: "No Content" });
     } else {
-      return res.status(201).json({ publication: publication });
+      return res.status(201).json({ group: group });
     }
   } catch (err) {
     console.log(err);
@@ -20,14 +21,16 @@ export const Publication = async (req, res) => {
   }
 };
 
-export const getPublications = async (req, res) => {
+export const getGroups = async (req, res) => {
   try {
-    const publication = await publicationModel.findAll({ limit: 50 });
+    const group = await groupsModel.findAll({
+      include: [{ model: publicationModel }],
+    });
 
-    if (publication.length === 0) {
+    if (group.length === 0) {
       return res.status(204).json({ message: "No Content" });
     } else {
-      return res.status(200).json({ publication: publication });
+      return res.status(200).json({ group: group });
     }
   } catch (err) {
     console.log(err);
@@ -35,7 +38,7 @@ export const getPublications = async (req, res) => {
   }
 };
 
-export const createPublication = async (req, res) => {
+export const createGroup = async (req, res) => {
   try {
     const errors = validationResult(req);
 
@@ -43,34 +46,34 @@ export const createPublication = async (req, res) => {
       return res.status(422).json({ message: errors.array() });
     }
 
-    const {
-      title,
-      description,
-      requirements,
-      benefits,
-      address,
-      UserId,
-      groupId,
-    } = req.body;
+    const { title, description, UserId, publicationId } = req.body;
+
+    const existingGroup = await groupsModel.findOne({
+      where: { title: title },
+    });
+
+    if (existingGroup) {
+      return res
+        .status(400)
+        .json({ message: "the group title already exists" });
+    }
 
     //para no generar un error a la hora de no enviar una Img
-    const publicationsImg = req.file
+    const groupImg = req.file
       ? req.file.path.replace("\\", "/")
-      : "../images/code-img";
+      : "../images/skill-logo";
 
-    const result = await publicationModel.create({
+    const result = await groupsModel.create({
       title,
       description,
-      requirements,
-      benefits,
-      address,
+      groupImg: groupImg,
       UserId,
-      groupId,
+      publicationId,
     });
 
     return res.status(200).json({
-      message: "Publication created successfully",
-      Publication: result,
+      message: "Group created successfully",
+      Group: result,
     });
   } catch (err) {
     console.error(err);
@@ -78,32 +81,34 @@ export const createPublication = async (req, res) => {
   }
 };
 
-export const editPublication = async (req, res) => {
+export const editGroup = async (req, res) => {
   try {
-    const { Id, title, description, requirements, benefits, address } =
-      req.body;
+    const { Id, title, description, UserId } = req.body;
 
-    const publication = await publicationModel.findOne({ where: { Id: Id } });
+    const [group, existingTitle] = await Promise.all([
+      groupsModel.findOne({
+        where: { Id: Id, UserId: UserId },
+      }),
 
-    if (!publication) {
+      groupsModel.findOne({ where: { title: title } }),
+    ]);
+
+    if (!group || existingTitle) {
       return res.status(400).json({ message: "Invalid Data" });
     }
 
     // TODO: Agregar imagen
-    const updatepublication = await publicationModel.update(
+    const updateGroup = await groupsModel.update(
       {
         title: title,
         description: description,
-        requirements: requirements,
-        benefits: benefits,
-        address: address,
       },
       { where: { Id: Id } }
     );
 
     return res.status(200).json({
-      message: "publication Updated successfully",
-      publication: updatepublication.dataValues,
+      message: "Group Updated successfully",
+      Group: updateGroup.dataValues,
     });
   } catch (err) {
     console.log(err);
@@ -111,20 +116,20 @@ export const editPublication = async (req, res) => {
   }
 };
 
-export const deletePublication = async (req, res) => {
+export const deleteGroup = async (req, res) => {
   try {
     const { Id } = req.body;
 
-    const publication = await publicationModel.findOne({ where: { Id: Id } });
+    const group = await groupsModel.findOne({ where: { Id: Id } });
 
-    if (!publication) {
+    if (!group) {
       return res.status(400).json({ message: "Invalid Data" });
     }
 
-    await publicationModel.destroy({ where: { Id: Id } });
+    await groupsModel.destroy({ where: { Id: Id } });
 
     return res.status(200).json({
-      message: "publication delete successfully",
+      message: "Group delete successfully",
     });
   } catch (err) {
     console.log(err);

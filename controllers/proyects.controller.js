@@ -1,4 +1,5 @@
 import { proyects as proyectModel } from "../model/proyects.model.js";
+import { validationResult } from "express-validator";
 
 //TODO mejorar el manejo de las imagenes y Agregar validaciones.
 
@@ -36,13 +37,19 @@ export const getProyects = async (req, res) => {
 
 export const createProyect = async (req, res) => {
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ message: errors.array() });
+    }
+
     const { proyectName, proyectDesc, proyectUrl, proyectRepository, UserId } =
       req.body;
 
     //para no generar un error a la hora de no enviar una Img
     const proyectImages = req.file
       ? req.file.path.replace("\\", "/")
-      : "../images/proyect-img";
+      : "/images/proyect-img";
 
     const result = await proyectModel.create({
       proyectName,

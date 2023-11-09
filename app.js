@@ -10,8 +10,10 @@ import loginRouter from "./routes/login.routes.js";
 import publicationRouter from "./routes/publications.routes.js";
 import skillsRouter from "./routes/skills.routes.js";
 import proyectsRouter from "./routes/proyects.routes.js";
+import groupsRouter from "./routes/groups.routes.js";
 import { typeUser as createUserType } from "./middleware/createTypeUser.middleware.js";
 import { adminUser as createAdminUser } from "./middleware/createAdminUser.middleware.js";
+import { mainGroup as createMainGroup } from "./middleware/createMainGroup.middleware.js";
 import { db_relationalas } from "./model/db_relationals.model.js";
 import { loginValidator } from "./middleware/loginValidator.middleware.js";
 import cors from "cors";
@@ -63,14 +65,17 @@ app.use("/api/users", userRouter);
 app.use("/api/skills", skillsRouter);
 app.use("/api/proyects", proyectsRouter);
 app.use("/api/publications", publicationRouter);
+app.use("/api/groups", groupsRouter);
 
 db_relationalas();
 
 async function startServer() {
   try {
     await sequelize.sync({ force: false });
+
     await createUserType();
     await createAdminUser();
+    await createMainGroup();
 
     app.listen(PORT, () => {
       console.log("Running on port: " + PORT);
