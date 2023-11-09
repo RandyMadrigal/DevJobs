@@ -59,3 +59,9 @@ export const createGroupValidation = [
   body("title").trim().notEmpty().isLength({ min: 2, max: 120 }),
   body("description").trim().notEmpty().isLength({ min: 2, max: 120 }),
 ];
+
+export const createCommentValidation = [
+  body("description").trim().notEmpty().isLength({ min: 0, max: 120 }),
+  body("UserId").trim().notEmpty().isLength({ min: 2, max: 120 }),
+  body("publicationId").trim().notEmpty().isLength({ min: 2, max: 120 }),
+];

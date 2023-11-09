@@ -1,4 +1,6 @@
 import { publications as publicationModel } from "../model/publications.model.js";
+import { comments as commentModel } from "../model/comments.model.js";
+
 import { validationResult } from "express-validator";
 
 //TODO mejorar el manejo de las imagenes y Agregar validaciones.
@@ -7,7 +9,10 @@ export const Publication = async (req, res) => {
   try {
     const Id = req.body.Id;
 
-    const publication = await publicationModel.findOne({ where: { Id: Id } });
+    const publication = await publicationModel.findOne({
+      where: { Id: Id },
+      include: [{ model: commentModel }],
+    });
 
     if (!publication) {
       return res.status(204).json({ message: "No Content" });
@@ -22,7 +27,10 @@ export const Publication = async (req, res) => {
 
 export const getPublications = async (req, res) => {
   try {
-    const publication = await publicationModel.findAll({ limit: 50 });
+    const publication = await publicationModel.findAll(
+      { include: [{ model: commentModel }] },
+      { limit: 50 }
+    );
 
     if (publication.length === 0) {
       return res.status(204).json({ message: "No Content" });
