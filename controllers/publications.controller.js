@@ -43,8 +43,15 @@ export const createPublication = async (req, res) => {
       return res.status(422).json({ message: errors.array() });
     }
 
-    const { title, description, requirements, benefits, address, UserId } =
-      req.body;
+    const {
+      title,
+      description,
+      requirements,
+      benefits,
+      address,
+      UserId,
+      groupId,
+    } = req.body;
 
     //para no generar un error a la hora de no enviar una Img
     const publicationsImg = req.file
@@ -58,6 +65,7 @@ export const createPublication = async (req, res) => {
       benefits,
       address,
       UserId,
+      groupId,
     });
 
     return res.status(200).json({

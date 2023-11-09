@@ -1,4 +1,5 @@
 import { groups as groupsModel } from "../model/groups.model.js";
+import { publications as publicationModel } from "../model/publications.model.js";
 import { validationResult } from "express-validator";
 
 //TODO mejorar el manejo de las imagenes y Agregar validaciones.
@@ -22,7 +23,9 @@ export const group = async (req, res) => {
 
 export const getGroups = async (req, res) => {
   try {
-    const group = await groupsModel.findAll();
+    const group = await groupsModel.findAll({
+      include: [{ model: publicationModel }],
+    });
 
     if (group.length === 0) {
       return res.status(204).json({ message: "No Content" });

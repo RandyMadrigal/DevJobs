@@ -44,6 +44,7 @@ export const createPublicationValidation = [
   body("benefits").trim().notEmpty().isLength({ min: 5, max: 120 }),
   body("address").trim().notEmpty().isLength({ min: 5, max: 120 }),
   body("UserId").trim().notEmpty().isLength({ min: 5, max: 120 }),
+  body("groupId").trim().notEmpty().isLength({ min: 5, max: 120 }),
 ];
 
 export const createProyectValidation = [
