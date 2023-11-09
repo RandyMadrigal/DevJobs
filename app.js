@@ -11,6 +11,7 @@ import publicationRouter from "./routes/publications.routes.js";
 import skillsRouter from "./routes/skills.routes.js";
 import proyectsRouter from "./routes/proyects.routes.js";
 import groupsRouter from "./routes/groups.routes.js";
+import commentRouter from "./routes/comment.routes.js";
 import { typeUser as createUserType } from "./middleware/createTypeUser.middleware.js";
 import { adminUser as createAdminUser } from "./middleware/createAdminUser.middleware.js";
 import { mainGroup as createMainGroup } from "./middleware/createMainGroup.middleware.js";
@@ -66,6 +67,7 @@ app.use("/api/skills", skillsRouter);
 app.use("/api/proyects", proyectsRouter);
 app.use("/api/publications", publicationRouter);
 app.use("/api/groups", groupsRouter);
+app.use("/api/comments", commentRouter);
 
 db_relationalas();
 
