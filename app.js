@@ -15,6 +15,7 @@ import commentRouter from "./routes/comment.routes.js";
 import { typeUser as createUserType } from "./middleware/createTypeUser.middleware.js";
 import { adminUser as createAdminUser } from "./middleware/createAdminUser.middleware.js";
 import { mainGroup as createMainGroup } from "./middleware/createMainGroup.middleware.js";
+import { members as members } from "./middleware/members.middleware.js";
 import { db_relationalas } from "./model/db_relationals.model.js";
 import { loginValidator } from "./middleware/loginValidator.middleware.js";
 import cors from "cors";
@@ -73,11 +74,12 @@ db_relationalas();
 
 async function startServer() {
   try {
-    await sequelize.sync({ force: false });
+    await sequelize.sync({ force: true });
 
     await createUserType();
     await createAdminUser();
     await createMainGroup();
+    await members();
 
     app.listen(PORT, () => {
       console.log("Running on port: " + PORT);
