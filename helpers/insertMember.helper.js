@@ -2,7 +2,7 @@ import config from "../config/config.json" assert { type: "json" };
 import { groups as groupModel } from "../model/groups.model.js";
 import { members as memberModel } from "../model/members.model.js";
 
-export const insertMember = async (UserId) => {
+export const insertMember = async (userId) => {
   try {
     const group = config.MAIN_GROUP;
 
@@ -12,7 +12,7 @@ export const insertMember = async (UserId) => {
     });
 
     await memberModel.create({
-      UserId: UserId,
+      userId: userId,
       groupId: groupId.Id,
     });
     console.log("inserted in the main group");

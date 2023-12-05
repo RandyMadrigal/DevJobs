@@ -18,7 +18,7 @@ export const members = async () => {
     });
 
     await memberModel.findOrCreate({
-      where: { UserId: adminUserId.Id, groupId: mainGroupId.Id },
+      where: { userId: adminUserId.Id, groupId: mainGroupId.Id },
     });
   } catch (err) {
     console.log(err);

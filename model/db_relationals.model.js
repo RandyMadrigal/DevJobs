@@ -7,7 +7,7 @@ import { groups as groupsModel } from "./groups.model.js";
 import { comments as commentsModel } from "./comments.model.js";
 import { publicationsOptions as publicationsOptionsModel } from "./publicationsOptions.model.js";
 import { reactionsTypes as reactionsTypesModel } from "./reactionsTypes.model.js";
-import { members as membersModel } from "./members.model.js";
+import { members } from "./members.model.js";
 
 export const db_relationalas = () => {
   usersModel.belongsTo(userTypeModel, {
@@ -69,6 +69,6 @@ export const db_relationalas = () => {
 
   //MEMBERS RELATION
 
-  usersModel.belongsToMany(groupsModel, { through: membersModel });
-  groupsModel.belongsToMany(usersModel, { through: membersModel });
+  usersModel.belongsToMany(groupsModel, { through: members });
+  groupsModel.belongsToMany(usersModel, { through: members });
 };

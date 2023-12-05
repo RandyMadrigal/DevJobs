@@ -14,4 +14,6 @@ router.put("/editGroup", groupController.editGroup);
 
 router.delete("/deleteGroup", groupController.deleteGroup);
 
+router.post("/getMembers", groupController.getMembers);
+
 export default router;

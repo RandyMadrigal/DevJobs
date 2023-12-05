@@ -16,7 +16,7 @@ export const mainGroup = async () => {
         title: Main_Group.title,
         description: Main_Group.description,
         groupImg: Main_Group.groupImg,
-        UserId: adminUser.Id,
+        userId: adminUser.Id,
       },
     });
 
