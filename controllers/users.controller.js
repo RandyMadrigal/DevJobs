@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { sendEmail as transporter } from "../services/emailService.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { insertMember } from "../helpers/insertMember.helper.js";
 
 dotenv.config();
 
@@ -76,6 +77,10 @@ export const createUser = async (req, res) => {
       `Welcome to DevJobs Community ${UserNickName}`,
       `<h3> Welcome ${UserNickName}<h3> <p>Para activar tu cuenta sigue el siguiente enlace: <a href="http://localhost:8088/Api/users/activeUser/?token=${token}"> ACTIVAR CUENTA </a></p>`
     );
+
+    console.log(result.Id);
+
+    await insertMember(result.Id);
 
     return res.status(200).json({
       message: "User created successfully",
