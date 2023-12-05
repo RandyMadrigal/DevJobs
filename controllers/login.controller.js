@@ -44,7 +44,9 @@ export const Login = async (req, res) => {
     const passwordMatch = await bcrypt.compare(UserPassword, user.UserPassword);
 
     if (passwordMatch) {
-      const token = jwt.sign({ user, exp: 86600 }, secret);
+      const expiracionEnSegundos = 3600;
+      const expiracion = Math.floor(Date.now() / 1000) + expiracionEnSegundos;
+      const token = jwt.sign({ user, exp: expiracion }, secret);
       res.cookie("token", token, { httpOnly: true });
 
       res

@@ -1,5 +1,7 @@
+import { users } from "../model/users.model.js";
 import { groups as groupsModel } from "../model/groups.model.js";
 import { publications as publicationModel } from "../model/publications.model.js";
+import { members as memberModel } from "../model/members.model.js";
 import { validationResult } from "express-validator";
 
 //TODO mejorar el manejo de las imagenes y Agregar validaciones.
@@ -134,5 +136,24 @@ export const deleteGroup = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getMembers = async (req, res) => {
+  try {
+    const Id = req.body.Id;
+
+    const group = await groupsModel.findOne({ where: { Id: Id } });
+
+    //TODO devolver nombres de usuarios.
+    if (!group) {
+      return res.status(204).json({ message: "No Content" });
+    } else {
+      const result = await memberModel.findAll({ where: { groupId: Id } });
+      return res.status(201).json({ Members: result });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
